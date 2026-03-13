@@ -14,7 +14,7 @@ pipeline {
 
         stage('Checkout Github') {
             steps {
-                git credentialsId: 'github-cred', url: 'https://github.com/AustinXu-Dev/mern-todo-app-6530069.git'
+                git credentialsId: 'github-cred', branch: 'main', url: 'https://github.com/AustinXu-Dev/mern-todo-app-6530069.git'
             }
         }
 
