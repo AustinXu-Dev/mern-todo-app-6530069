@@ -18,24 +18,26 @@ pipeline {
             }
         }
 
-        stage('Install Node Dependencies') {
+        stage('Build') {
             steps {
+                dir('TODO/todo_frontend') {
+                    sh 'npm install'
+                }
                 dir('TODO/todo_backend') {
                     sh 'npm install'
                 }
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Containerise') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
+                sh "docker build -t ${IMAGE_NAME}:latest ."
             }
         }
-        stage('Push Docker Image') {
+
+        stage('Push') {
             steps {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
-                sh "docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${IMAGE_NAME}:latest"
                 sh "docker push ${IMAGE_NAME}:latest"
             }
         }
