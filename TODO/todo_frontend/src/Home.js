@@ -62,7 +62,7 @@ const Home = () => {
         <main>
             <Create />
             {
-                todos.length === 0 ? <div className='task'>No tasks found</div> :
+                todos.length === 0 ? <div className='task'>No tasks found.</div> :
                     todos.map((todo) => (
                         <div className='task' key={todo._id}>
                             <div className='checkbox'>
