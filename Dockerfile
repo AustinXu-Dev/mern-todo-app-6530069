@@ -1,21 +1,19 @@
-# Use an official alpine nodeJS image as the base image
-FROM node:alpine
-
+# Stage 1: Build React frontend
+FROM node:alpine AS frontend-build
 RUN apk add --no-cache libatomic
-# Set working directory in the container
-WORKDIR /app
-
-# Copy package.json and package-lock.json to the container
-COPY TODO/todo_backend/package*.json ./
-
-# Install only production nodeJS dependencies in Docker Image
+WORKDIR /frontend
+COPY TODO/todo_frontend/package*.json ./
 RUN npm install
+COPY TODO/todo_frontend/ .
+RUN npm run build
 
-# Copy the rest of the application code into the container
+# Stage 2: Production Express server
+FROM node:alpine
+RUN apk add --no-cache libatomic
+WORKDIR /app
+COPY TODO/todo_backend/package*.json ./
+RUN npm install
 COPY TODO/todo_backend/ .
-
-# Expose the app on a port
+COPY --from=frontend-build /frontend/build ./static/build
 EXPOSE 5000
-
-# Command that runs the app
 CMD ["node", "server.js"]
